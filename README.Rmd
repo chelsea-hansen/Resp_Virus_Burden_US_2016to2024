@@ -1,0 +1,17 @@
+---
+output: github_document
+---
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%",
+  warning=FALSE,
+  message=FALSE
+)
+```
+
+Data and code for research project entitled "Hospitalizations and Deaths from Major Respiratory Viruses in the US: an ensemble time series modeling study, 2016-2024
