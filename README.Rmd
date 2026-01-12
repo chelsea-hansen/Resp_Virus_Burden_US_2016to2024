@@ -16,21 +16,48 @@ knitr::opts_chunk$set(
 
 Data and code for research project entitled "Hospitalizations and Deaths from Major Respiratory Viruses in the US: an ensemble time series modeling study, 2016-2024"
 
-
-## Repository Structure
-
 ### `data/`
 This folder contains data files used for running the time series regression models.
 
-- **`Data_public.rds`**  
+- **`data_public.rds`**  
   Data used for running time series regression models.
   - `date`: MMWR week ending date  
-  - `season`: Respiratory virus season defined as week 27 of year *x* through week 26 of year *(x + 1)*  
+  - `season`: Respiratory virus season defined as week 27 of year *(x)* through week 26 of year *(x + 1)*  
   - `year_decimal`: Continuous variable for year  
+  - `mmwr_week`:MMWR week from 1 to 52 (or 53) each year 
+  - `sin1` and `cos1`: used for modeling seasonality in Model A
+  - `agegrp`: Age group in years: <1, 1-4, 5-49, 50-64, 65+ 
+  - `pop`: Estimated mid-year population
+  - `pop_enrolled`:Population enrolled in a participating health plan during that month
+  - `hosp_resp_1st_rate`: Hospitalization rate per 100,000 population where a respiratory cause is listed in the first position of the hospital discharge form. Smoothed with a 5-week moving average. 
+  - `hosp_respcirc_1st_rate`: Hospitalization rate per 100,000 population where a respiratory or circulatory cause is listed in the first position of the hospital discharge form. Smoothed with a 5-week moving average. 
+  - `hosp_resp_any_rate`: Hospitalization rate per 100,000 population where a respiratory cause is listed anywhere on the hospital discharge form. Smoothed with a 5-week moving average. Records with a COVID-19 code are excluded prior to July 1, 2022. 
+  - `mort_resp_underlying_rate`: Hospitalization rate per 100,000 population where a respiratory cause is listed as the underlying cause of death. Smoothed with a 5-week moving average. 
+  - `mort_respcirc_underlying_rate`: Hospitalization rate per 100,000 population where a respiratory or circulatory cause is listed as the underlying cause of death. Smoothed with a 5-week moving average. 
+  - `mort_resp_any_rate`: Hospitalization rate per 100,000 population where a respiratory cause is listed anywhere anywhere on the death certificate. Smoothed with a 5-week moving average. Records with a COVID-19 code are excluded prior to July 1, 2022. 
+  - remaining variables are proxies for virus circulation based on the percent positive of PCR tests. 
 
-- **`Recorded_burden.rds`**  
+
+- **`recorded_burden.rds`**  
   Recorded season-level, virus-specific burden data used for comparison with modeled estimates.
-  - 
+  - `agegrp`: Age group in years: <1, 1-4, 5-49, 50-64, 65+ 
+  - `season`: Respiratory virus season defined as week 27 of year *(x)* through week 26 of year *(x + 1)*  
+  - `flu_uc_rate`: season-level mortality rate where influenza is listed as the underlying cause-of-death. 
+  - `flu_mc_rate`: season-level mortality rate where influenza is listed anywhere on the death certificate. 
+  - `rsv`_uc_rate`: season-level mortality rate where RSV is listed as the underlying cause-of-death. 
+  - `rsv`_mc_rate`: season-level mortality rate where RSV is listed anywhere on the death certificate. 
+  - `cov_uc_rate`: season-level mortality rate where COVID-19 is listed as the underlying cause-of-death. 
+  - `cov_mc_rate`: season-level mortality rate where COVID-19 is listed anywhere on the death certificate. 
+  - `flu_1or2_rate`: season-level hospitalization rate where influenza is listed in the first or second position on the discharge form. 
+  - `flu_any_rate`: season-level hospitalization rate where influenza is listed anywhere on the discharge form.
+  - `rsv_1or2_rate`: season-level hospitalization rate where RSV is listed in the first or second position on the discharge form. 
+  - `rsv_any_rate`: season-level hospitalization rate where RSV is listed anywhere on the discharge form.
+  - `cov_1or2_rate`: season-level hospitalization rate where COVID-19 is listed in the first or second position on the discharge form. 
+  - `cov_any_rate`: season-level hospitalization rate where COVID-19 is listed anywhere on the discharge form.
+  - `hmpv_1or2_rate`: season-level hospitalization rate where HMPV is listed in the first or second position on the discharge form. 
+  - `hmpv_any_rate`: season-level hospitalization rate where HMPV is listed anywhere on the discharge form.
+  - `rhino_1or2_rate`: season-level hospitalization rate where rhinovirus is listed in the first or second position on the discharge form. 
+  - `rhino_any_rate`: season-level hospitalization rate where rhinovirus is listed anywhere on the discharge form.
 
 ---
 
@@ -38,16 +65,27 @@ This folder contains data files used for running the time series regression mode
 This folder contains the functions needed to reproduce the analysis.
 
 - **`Model_functions.R`**  
-  Runs the five time series models included in the ensemble.  
-  Key arguments:
-  - `dat`: Dataset name  
-  - `y_value`: Outcome variable being modeled  
+Runs the five time series models included in the ensemble.  
 
+- **`summary_functions.R`**  
+Functions to summarize the weekly-level model output
+
+- **`table_functions.R`**  
+Functions to create tables from the summarized model results 
+
+- **`figure_functions.R`**  
+Functions to create figures from the summarized model results
+  
 ---
 
 ### `scripts/`
 This folder contains scripts that call the functions in the `R/` folder.
 
-- **`Mortality_models.R`**  
+- **`mortality_models.R`**  
   Script to run the mortality models.
+  
+- **`hospitalization_models.R`**  
+  Script to run the mortality models.
+  
+Remaining scripts are for creating the tables and figures included in the manuscript. 
 
