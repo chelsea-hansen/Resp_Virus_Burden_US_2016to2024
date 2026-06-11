@@ -2,8 +2,8 @@ compare_pre_and_post = function(model_output, pop_col){
   
   
   pre_pandemic = c("2016-2017","2017-2018","2018-2019","2019-2020")
-  post_pandemic = c("2021-2022","2022-2023","2023-2024")
-  post_pandemic_covid = c("2022-2023","2023-2024")
+  post_pandemic = c("2022-2023","2023-2024","2024-2025")
+  post_pandemic_covid = c("2022-2023","2023-2024","2024-2025")
   
   pop_pre = model_output %>%filter(season %in% pre_pandemic) %>%  group_by(age) %>% summarize(true_pop = mean(pop_total)) %>% mutate(prop = true_pop/sum(true_pop))
   pop_post = model_output %>%filter(season %in% post_pandemic_covid) %>%  group_by(age) %>% summarize(true_pop = mean(pop_total)) %>% mutate(prop = true_pop/sum(true_pop))
@@ -157,7 +157,7 @@ compare_models = function(model_output, seasons, virus, pop_col){
 
 average_table = function(model_output, pop_col, season_list){
  
-  covid_seasons = c("2022-2023","2023-2024")
+  covid_seasons = c("2022-2023","2023-2024","2024-2025")
  pop = model_output %>%  group_by(age) %>% summarize(true_pop = mean(pop_total)) %>% mutate(prop = true_pop/sum(true_pop))
   
 
