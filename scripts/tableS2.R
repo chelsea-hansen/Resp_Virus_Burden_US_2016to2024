@@ -9,11 +9,11 @@ dat = readRDS("data/data_public.rds")
 source("R/summary_functions.R")
 source("R/table_functions.R")
 
-seasons = c("2016-2017","2017-2018","2018-2019","2019-2020","2022-2023","2023-2024")
+seasons = c("2016-2017","2017-2018","2018-2019","2019-2020","2022-2023","2023-2024","2024-2025")
 
-mort_model1 = readRDS("model_output/mort_resp_any.rds")
-mort_model2 = readRDS("model_output/mort_resp_underlying.rds")
-mort_model3 = readRDS("model_output/mort_respcirc_underlying.rds")
+mort_model1 = readRDS("main_results/mort_resp_any.rds")
+mort_model2 = readRDS("main_results/mort_resp_underlying.rds")
+mort_model3 = readRDS("main_results/mort_respcirc_underlying.rds")
 
 #resp - mc 
 mort1_part1 = compare_pre_and_post(mort_model1, "pop_total") %>% 
