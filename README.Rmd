@@ -29,12 +29,12 @@ This folder contains data files used for running the time series regression mode
   - `agegrp`: Age group in years: <1, 1-4, 5-49, 50-64, 65+ 
   - `pop`: Estimated mid-year population
   - `pop_enrolled`:Population enrolled in a participating health plan during that month
-  - `hosp_resp_1st_rate`: Hospitalization rate per 100,000 population where a respiratory cause is listed in the first position of the hospital discharge form. Smoothed with a 5-week moving average. 
-  - `hosp_respcirc_1st_rate`: Hospitalization rate per 100,000 population where a respiratory or circulatory cause is listed in the first position of the hospital discharge form. Smoothed with a 5-week moving average. 
-  - `hosp_resp_any_rate`: Hospitalization rate per 100,000 population where a respiratory cause is listed anywhere on the hospital discharge form. Smoothed with a 5-week moving average. Records with a COVID-19 code are excluded prior to July 1, 2022. 
-  - `mort_resp_underlying_rate`: Hospitalization rate per 100,000 population where a respiratory cause is listed as the underlying cause of death. Smoothed with a 5-week moving average. 
-  - `mort_respcirc_underlying_rate`: Hospitalization rate per 100,000 population where a respiratory or circulatory cause is listed as the underlying cause of death. Smoothed with a 5-week moving average. 
-  - `mort_resp_any_rate`: Hospitalization rate per 100,000 population where a respiratory cause is listed anywhere anywhere on the death certificate. Smoothed with a 5-week moving average. Records with a COVID-19 code are excluded prior to July 1, 2022. 
+  - `hosp_resp_1st_rate_smooth`: Hospitalization rate per 100,000 population where a respiratory cause is listed in the first position of the hospital discharge form. Smoothed with a 5-week moving average. 
+  - `hosp_respcirc_1st_rate_smooth`: Hospitalization rate per 100,000 population where a respiratory or circulatory cause is listed in the first position of the hospital discharge form. Smoothed with a 5-week moving average. 
+  - `hosp_resp_any_rate_smooth`: Hospitalization rate per 100,000 population where a respiratory cause is listed anywhere on the hospital discharge form. Smoothed with a 5-week moving average. Records with a COVID-19 code are excluded prior to July 1, 2022. 
+  - `mort_resp_underlying_rate_smooth`: Hospitalization rate per 100,000 population where a respiratory cause is listed as the underlying cause of death. Smoothed with a 5-week moving average. 
+  - `mort_respcirc_underlying_rate_smooth`: Hospitalization rate per 100,000 population where a respiratory or circulatory cause is listed as the underlying cause of death. Smoothed with a 5-week moving average. 
+  - `mort_resp_any_rate_smooth`: Hospitalization rate per 100,000 population where a respiratory cause is listed anywhere anywhere on the death certificate. Smoothed with a 5-week moving average. Records with a COVID-19 code are excluded prior to July 1, 2022. 
   - remaining variables are proxies for virus circulation based on the percent positive of PCR tests. 
 
 
