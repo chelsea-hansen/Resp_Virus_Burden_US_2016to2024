@@ -30,7 +30,7 @@ weekly_results = hosp_weekly %>%
 
 Fig2a = ggplot(weekly_results %>% filter(model=="Ensemble"))+
   theme_bw() +
-  geom_area(aes(x=date, y=excess_cov,   fill="Excess COVID")) +
+  geom_area(aes(x=date, y=excess_cov,   fill="SARS-CoV-2")) +
   geom_area(aes(x=date, y=excess_hmpv,  fill="Excess HMPV")) +
   geom_area(aes(x=date, y=excess_rsv,   fill="Excess RSV")) +
   geom_area(aes(x=date, y=excess_flu,   fill="Excess Flu")) +
@@ -40,7 +40,7 @@ Fig2a = ggplot(weekly_results %>% filter(model=="Ensemble"))+
             linewidth=0.3) +
   scale_color_manual(name=NULL, values=c("black")) +
   scale_fill_manual(name=NULL,
-                    values=c("seashell3","orchid3","red3","steelblue","goldenrod","olivedrab")) +
+                    values=c("seashell3","red3","steelblue","goldenrod","olivedrab","orchid3")) +
   facet_wrap(~age, scales="free", ncol=5) +
   theme(legend.position="top") +
   scale_x_date(date_breaks = "2 years", date_labels = "%Y")+
@@ -79,7 +79,7 @@ weekly_results_mort = rbind(weekly_results_mort_children, weekly_results_mort_ad
 
 Fig2b = ggplot(weekly_results_mort %>% filter(model=="Ensemble"))+
   theme_bw() +
-  geom_area(aes(x=date, y=excess_cov,   fill="Excess COVID")) +
+  geom_area(aes(x=date, y=excess_cov,   fill="Excess SARS-CoV-2")) +
   geom_area(aes(x=date, y=excess_hmpv,  fill="Excess HMPV")) +
   geom_area(aes(x=date, y=excess_rsv,   fill="Excess RSV")) +
   geom_area(aes(x=date, y=excess_flu,   fill="Excess Flu")) +
@@ -89,7 +89,7 @@ Fig2b = ggplot(weekly_results_mort %>% filter(model=="Ensemble"))+
             linewidth=0.3) +
   scale_color_manual(name=NULL, values=c("black")) +
   scale_fill_manual(name=NULL,
-                    values=c("seashell3","orchid3","red3","steelblue","goldenrod","olivedrab")) +
+                    values=c("seashell3","red3","steelblue","goldenrod","olivedrab","orchid3")) +
   facet_wrap(~age, scales="free", ncol=5) +
   theme(legend.position="none") +
   scale_x_date(date_breaks = "2 years", date_labels = "%Y")+

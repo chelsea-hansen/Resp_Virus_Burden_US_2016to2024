@@ -10,10 +10,10 @@ source("R/summary_functions.R")
 
 dat = readRDS("data/recorded_burden_public.rds") %>% mutate(age=agegrp)
 
-post_only = c("2022-2023","2023-2024")
+post_only = c("2022-2023","2023-2024","2024-2025")
 # Hospital  ---------------------------------------------------------------
 
-hosp_model = readRDS("model_output/hosp_resp_any.rds") 
+hosp_model = readRDS("main_results/hosp_resp_any.rds") 
 
 true_pop = readRDS("data/data_public.rds") %>% group_by(agegrp, season) %>% summarize(true_pop=mean(pop))
 hosp_seasonal = seasonal_summary(hosp_model,"pop_enrolled")
@@ -54,7 +54,7 @@ combined_long = combined %>%
   pivot_longer(cols=c("flu_median","rsv_median","hmpv_median","rhino_median","use_this_covid"),
                names_to = "virus",values_to="burden") %>% 
   mutate(virus = factor(virus, levels=c("use_this_covid","flu_median","rsv_median","hmpv_median","rhino_median"),
-                        labels=c("COVID-19","Influenza",'RSV',"HMPV","RV")),
+                        labels=c("COVID-19","Influenza",'RSV',"HMPV","RV/EV")),
          burden = ifelse(burden<0, 0, burden),
          age="All Ages")
 
@@ -95,7 +95,7 @@ combined_long_65 = combined_65 %>%
   pivot_longer(cols=c("flu_median","rsv_median","hmpv_median","rhino_median","use_this_covid"),
                names_to = "virus",values_to="burden") %>% 
   mutate(virus = factor(virus, levels=c("use_this_covid","flu_median","rsv_median","hmpv_median","rhino_median"),
-                        labels=c("COVID-19","Influenza",'RSV',"HMPV","RV")),
+                        labels=c("COVID-19","Influenza",'RSV',"HMPV","RV/EV")),
          burden = ifelse(burden<0, 0, burden),
          age="65+ years")
 
@@ -136,7 +136,7 @@ combined_long_less5 = combined_less5 %>%
   pivot_longer(cols=c("flu_median","rsv_median","hmpv_median","rhino_median","use_this_covid"),
                names_to = "virus",values_to="burden") %>% 
   mutate(virus = factor(virus, levels=c("use_this_covid","flu_median","rsv_median","hmpv_median","rhino_median"),
-                        labels=c("COVID-19","Influenza",'RSV',"HMPV","RV")),
+                        labels=c("COVID-19","Influenza",'RSV',"HMPV","RV/EV")),
          burden = ifelse(burden<0, 0, burden),
          age="<5 years")
 
@@ -146,8 +146,9 @@ combined_hosp_all = rbind(combined_long, combined_long_65, combined_long_less5) 
 
 
 # Mortality ---------------------------------------------------------------
-mort_model = readRDS("model_output/mort_resp_any.rds") 
-mort_seasonal = seasonal_summary(mort_model, "pop_total")
+mort_model = readRDS("main_results/mort_resp_any.rds") 
+mort_seasonal = seasonal_summary(mort_model, "pop_total") %>% 
+  mutate(rhino_median = ifelse(rhino_median<0,0,rhino_median))
 
 
 #All ages
@@ -184,7 +185,7 @@ combined_long_mort = combined_mort %>%
   pivot_longer(cols=c("flu_median","rsv_median","hmpv_median","rhino_median","use_this_covid"),
                names_to = "virus",values_to="burden") %>% 
   mutate(virus = factor(virus, levels=c("use_this_covid","flu_median","rsv_median","hmpv_median","rhino_median"),
-                        labels=c("COVID-19","Influenza",'RSV',"HMPV","RV")),
+                        labels=c("COVID-19","Influenza",'RSV',"HMPV","RV/EV")),
          burden = ifelse(burden<0, 0, burden),
          age="All Ages")
 
@@ -224,7 +225,7 @@ combined_long_mort_65 = combined_mort_65 %>%
   pivot_longer(cols=c("flu_median","rsv_median","hmpv_median","rhino_median","use_this_covid"),
                names_to = "virus",values_to="burden") %>% 
   mutate(virus = factor(virus, levels=c("use_this_covid","flu_median","rsv_median","hmpv_median","rhino_median"),
-                        labels=c("COVID-19","Influenza",'RSV',"HMPV","RV")),
+                        labels=c("COVID-19","Influenza",'RSV',"HMPV","RV/EV")),
          burden = ifelse(burden<0, 0, burden),
          age="65+ years")
 
@@ -264,7 +265,7 @@ combined_long_mort_less5 = combined_mort_less5 %>%
   pivot_longer(cols=c("flu_median","rsv_median","hmpv_median","rhino_median","use_this_covid"),
                names_to = "virus",values_to="burden") %>% 
   mutate(virus = factor(virus, levels=c("use_this_covid","flu_median","rsv_median","hmpv_median","rhino_median"),
-                        labels=c("COVID-19","Influenza",'RSV',"HMPV","RV")),
+                        labels=c("COVID-19","Influenza",'RSV',"HMPV","RV/EV")),
          burden = ifelse(burden<0, 0, burden),
          age="<5 years")
 
@@ -279,13 +280,18 @@ combined_all = rbind(combined_hosp_all,
                      combined_mort_all %>% rename("cov_any_count"=cov_mc_count,
                                                   "cov_1_2_count" = cov_uc_count)) %>% 
   mutate(outcome = factor(outcome,levels=c("Hospitalizations",'Deaths')),
-         age=factor(age,levels=c("All Ages","65+ years","<5 years")))
+         age=factor(age,levels=c("All Ages","65+ years","<5 years")),
+         virus_new = ifelse(virus=="COVID-19"&season %in% c("2019-2020","2020-2021","2021-2022"),"COVID-19 (pandemic)",
+                            ifelse(virus=="COVID-19"&season %in% c("2022-2023","2023-2024","2024-2025"),"COVID-19 (endemic)",virus)),
+         virus_new = factor(virus_new,levels=c("COVID-19 (pandemic)","COVID-19 (endemic)",2,3,4,5),
+                            labels=c("SARS-CoV-2 (pandemic)","SARS-CoV-2 (endemic)","Influenza",'RSV',"HMPV","RV/EV")))
 
-fig3 = ggplot(combined_all %>% filter(season!="2015-2016"))+
+         
+fig3 = ggplot(combined_all %>% filter(season!="2015-2016",!is.na(virus_new)))+
   theme_bw()+
-  geom_bar(aes(x=season, y=burden, fill=virus),stat="identity")+
+  geom_bar(aes(x=season, y=burden, fill=virus_new),stat="identity")+
   scale_y_continuous(labels = comma)+
-  scale_fill_manual(name=NULL, values=c("darkorchid1","red","goldenrod2","steelblue","olivedrab"))+
+  scale_fill_manual(name=NULL, values=c("darkorchid4","darkorchid2","red","goldenrod2","steelblue","olivedrab"))+
   labs(x=NULL, y=NULL)+
   facet_wrap(~age+outcome,scale="free_y",ncol=2)+
   theme(axis.text.x = element_text(angle=90),
