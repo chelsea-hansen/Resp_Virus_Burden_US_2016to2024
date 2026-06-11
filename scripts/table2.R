@@ -5,13 +5,14 @@ library(data.table)
 library(writexl)
 
 dat = readRDS("data/data_public.rds") 
+
 source("R/summary_functions.R")
 source("R/table_functions.R")
 
-seasons = c("2016-2017","2017-2018","2018-2019","2019-2020","2022-2023","2023-2024")
+seasons = c("2016-2017","2017-2018","2018-2019","2019-2020","2022-2023","2023-2024","2024-2025")
 
-hosp_model = readRDS("model_output/hosp_resp_any.rds")
-mort_model = readRDS("model_output/mort_resp_any.rds")
+hosp_model = readRDS("main_results/hosp_resp_any.rds")
+mort_model = readRDS("main_results/mort_resp_any.rds")
 
 
 hosp_table1_part1 = compare_pre_and_post(hosp_model, "pop_enrolled") %>% 
