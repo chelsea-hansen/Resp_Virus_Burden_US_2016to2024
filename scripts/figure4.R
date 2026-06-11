@@ -12,14 +12,14 @@ dat = readRDS("data/data_public.rds") %>% mutate(age=agegrp)
 
 
 pre_pandemic = c("2016-2017","2017-2018","2018-2019","2019-2020")
-post_only = c("2022-2023","2023-2024")
+post_only = c("2022-2023","2023-2024","2024-2025")
 
 
 
 # Hospital ----------------------------------------------------------------
 
 
-hosp_model = readRDS("model_output/hosp_resp_any.rds") 
+hosp_model = readRDS("main_results/hosp_resp_any.rds") 
 
 hosp_pre = average_across_seasons(hosp_model, "pop_enrolled",pre_pandemic) %>%
   mutate(period = "Pre-pandemic")
@@ -33,7 +33,7 @@ hosp_all = rbind(hosp_pre, hosp_post) %>%
   separate(name, into = c("virus", "measure"), sep = "_") %>% 
   mutate(age = factor(age, levels=c("<1","1to4","5to49","50to64","65+")),
          virus = factor(virus, levels=c("flu", "rsv", "hmpv", "rhino","cov"),
-                        labels=c("Influenza","RSV","HMPV","RV","COVID-19")))%>% 
+                        labels=c("Influenza","RSV","HMPV","RV/EV","SARS-CoV-2")))%>% 
   pivot_wider(names_from=measure, values_from=estimate) %>% 
   mutate(period = factor(period, levels=c("Pre-pandemic","Post-pandemic")),
          model = factor(model,levels=c("Model_A","Model_B","Model_C","Model_D","Model_E","Ensemble"),
@@ -53,11 +53,12 @@ hosp_avg = ggplot(hosp_all %>% filter(model=="Ensemble",median>0))+
         axis.text.x=element_blank(),
         axis.ticks.x=element_blank(),
         strip.text = element_text(size=12),
-        legend.text = element_text(size=15))
+        legend.text = element_text(size=15))+
+  geom_hline(aes(yintercept=0))
 hosp_avg
 
 # Mortality ---------------------------------------------------------------
-mort_model = readRDS("model_output/mort_resp_any.rds") 
+mort_model = readRDS("main_results/mort_resp_any.rds") 
 
 mort_pre = average_across_seasons(mort_model, "pop_total",pre_pandemic) %>%
   mutate(period = "Pre-pandemic")
@@ -71,14 +72,15 @@ mort_all = rbind(mort_pre, mort_post) %>%
   separate(name, into = c("virus", "measure"), sep = "_") %>% 
   mutate(age = factor(age, levels=c("<1","1to4","5to49","50to64","65+")),
          virus = factor(virus, levels=c("flu", "rsv", "hmpv", "rhino","cov"),
-                        labels=c("Influenza","RSV","HMPV","RV","COVID-19")))%>% 
+                        labels=c("Influenza","RSV","HMPV","RV/EV","SARS-CoV-2")))%>% 
   pivot_wider(names_from=measure, values_from=estimate) %>% 
   mutate(period = factor(period, levels=c("Pre-pandemic","Post-pandemic")),
          model = factor(model,levels=c("Model_A","Model_B","Model_C","Model_D","Model_E","Ensemble"),
                         labels=c("A","B","C","D","E","Ensemble")))
 
+mort_all = mort_all %>% mutate(flag = ifelse(period=="Pre-pandemic" & virus=="COVID-19",1,0))
 
-mort_avg = ggplot(mort_all %>% filter(model=="Ensemble", median>0))+
+mort_avg = ggplot(mort_all %>% filter(model=="Ensemble",flag==0))+
   theme_bw()+
   geom_errorbar(aes(x=virus, ymin=lower, ymax=upper,color=virus, group=period),linewidth=2,width=0,
                 position=position_dodge(width=0.8))+
@@ -91,7 +93,8 @@ mort_avg = ggplot(mort_all %>% filter(model=="Ensemble", median>0))+
         axis.text.x=element_blank(),
         axis.ticks.x=element_blank(),
         strip.text = element_text(size=12),
-        legend.text = element_text(size=15))
+        legend.text = element_text(size=15))+
+  geom_hline(aes(yintercept=0))
 mort_avg
 averages = plot_grid(hosp_avg, mort_avg, nrow=2, rel_heights = c(1,0.8),align="v")
 averages
