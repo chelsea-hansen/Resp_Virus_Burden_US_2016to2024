@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-Data and code for research project entitled "Hospitalizations and Deaths from Major Respiratory Viruses in the US: an ensemble time series modeling study, 2016-2024"
+Data and code for research project entitled "Hospitalizations and Deaths from Major Respiratory Viruses in the US: an ensemble time series modeling study, 2016-2025"
 
 ### `data/`
 This folder contains data files used for running the time series regression models.
