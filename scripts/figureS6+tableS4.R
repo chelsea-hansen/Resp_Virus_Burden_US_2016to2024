@@ -138,7 +138,7 @@ ggsave(plot=LOO_mort,"figures/TIFF/figureS6.tiff",height=8.5,width=11,units="in"
 
 # Table Versions ----------------------------------------------------------
 
-table_version = rbind(mort_avg,mort_LOO_flu, mort_LOO_covid, mort_LOO_rsv,mort_LOO_hmpv,mort_LOO_rhino) %>% 
+table_version_part1 = rbind(mort_avg,mort_LOO_flu, mort_LOO_covid, mort_LOO_rsv,mort_LOO_hmpv,mort_LOO_rhino) %>% 
   pivot_longer(
     cols = matches("_(median|lower|upper)$"),
     names_to = c("virus", ".value"),
@@ -151,7 +151,26 @@ table_version = rbind(mort_avg,mort_LOO_flu, mort_LOO_covid, mort_LOO_rsv,mort_L
                           labels=c("Reference","Influenza","RSV","HMPV","RV/EV","SARS-CoV-2")),
          table_label = paste0(sprintf("%.1f", median),"\n(",sprintf("%.1f", lower),"-",sprintf("%.1f", upper),")")) %>% 
   arrange(age,virus, version) %>% 
-  pivot_wider(id_cols=c(age,virus),names_from = version, values_from = table_label)
+  filter(virus!="SARS-CoV-2")
+
+table_version_part2 = rbind(mort_avg_post,mort_LOO_flu_post, mort_LOO_covid_post, mort_LOO_rsv_post,mort_LOO_hmpv_post,mort_LOO_rhino_post) %>% 
+  pivot_longer(
+    cols = matches("_(median|lower|upper)$"),
+    names_to = c("virus", ".value"),
+    names_sep = "_") %>% 
+  filter(virus!="combo", model=="Ensemble") %>% 
+  mutate(virus = factor(virus, levels=c("flu","rsv","hmpv","rhino","cov"),
+                        labels=c("Influenza",'RSV',"HMPV","RV/EV","SARS-CoV-2")),
+         age = factor(age, levels=c("<1","1to4","5to49","50to64","65+")),
+         version = factor(version,levels=c("Reference","Leave out:Flu","Leave out:RSV","Leave out:HMPV","Leave out:RV/EV","Leave out:SARS-CoV-2"),
+                          labels=c("Reference","Influenza","RSV","HMPV","RV/EV","SARS-CoV-2")),
+         table_label = paste0(sprintf("%.1f", median),"\n(",sprintf("%.1f", lower),"-",sprintf("%.1f", upper),")")) %>% 
+  arrange(age,virus, version) %>% 
+  filter(virus=="SARS-CoV-2")
+
+  table_version = rbind(table_version_part1, table_version_part2) %>% 
+    arrange(age,virus, version) %>% 
+    pivot_wider(id_cols=c(age,virus),names_from = version, values_from = table_label)
 
 write_xlsx(table_version, "tables/tableS4.xlsx") 
 
