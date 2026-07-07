@@ -12,20 +12,13 @@ burden_time_series = function(data1, y_value, data2, label){
            excess_cov   = excess_hmpv + cov_median,
            age = factor(age, levels=c("<1","1to4","5to49","50to64","65+")))
   
-  #minimums = data1 %>% 
-  ##  group_by(agegrp) %>% 
-  #  summarize(min_observed = min(obs_value), .groups = "drop") %>% 
-   # mutate(age = factor(agegrp, levels=c("<1","1to4","5to49","50to64","65+"))) %>% 
-   # arrange(age)
-  
- # mins = minimums$min_observed * 0.8
   
   figure = ggplot() +
     theme_bw() +
-    geom_area(data=plot_data ,aes(x=date, y=excess_cov,   fill="Excess COVID")) +
-    geom_area(data=plot_data ,aes(x=date, y=excess_hmpv,  fill="Excess hMPV")) +
-    geom_area(data=plot_data,aes(x=date, y=excess_rsv,   fill="Excess RSV")) +
-    geom_area(data=plot_data ,aes(x=date, y=excess_flu,   fill="Excess Flu")) +
+    geom_area(data=plot_data ,aes(x=date, y=excess_cov, fill="Excess COVID")) +
+    geom_area(data=plot_data ,aes(x=date, y=excess_hmpv, fill="Excess hMPV")) +
+    geom_area(data=plot_data,aes(x=date, y=excess_rsv, fill="Excess RSV")) +
+    geom_area(data=plot_data ,aes(x=date, y=excess_flu, fill="Excess Flu")) +
     geom_area(data=plot_data ,aes(x=date, y=excess_rhino, fill="Excess RV")) +
     geom_area(data=plot_data ,aes(x=date, y=baseline_median, fill="Baseline")) +
     geom_line(data = data1,
@@ -93,8 +86,6 @@ plot_ensemble_with_recorded = function(mod_data,recorded_data,outcome,virus,labe
     color1 = "darkorchid4"
     color2 = "orchid1"
   }
-  
-  
   
   
   med_col   <- sym(paste0(virus, "_median"))
@@ -219,8 +210,6 @@ plot_ensemble_with_recorded = function(mod_data,recorded_data,outcome,virus,labe
   }
   
   
-  
-  
   med_col   <- sym(paste0(virus, "_median"))
   lower_col <- sym(paste0(virus, "_lower"))
   upper_col <- sym(paste0(virus, "_upper"))
@@ -273,7 +262,6 @@ plot_ensemble_with_recorded = function(mod_data,recorded_data,outcome,virus,labe
     theme(axis.text.x = element_text(angle = 90)) +
     guides(fill="none")+
     labs(x = NULL, y = paste0(label," per 100,000"))
-plot1
 
   
   plot2 = ggplot() +
