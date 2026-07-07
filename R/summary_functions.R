@@ -183,6 +183,7 @@ average_across_seasons = function(data, pop_col, seasons_to_include){
 }
 
 
+#This function also includes version for running averages for different outcomes simultaneously. 
 average_across_seasons_v2 = function(data, pop_col, seasons_to_include){
   
   data <- as.data.table(data)
